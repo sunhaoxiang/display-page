@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            margin: 0;
+            background-color: #999;
+        }
+        #wrap{
+            height: 500px;
+            background: url(img/bg.png) no-repeat center;
+            background-size: 1800px 500px;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 800px;
+            margin-top: 100px;
+        }
+        img{
+            border: none;
+            vertical-align: top;
+        }
+        #wrap img{
+            width: 300px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -150px;
+            margin-top: -100px;
+            transition: .7s ease-in-out;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var aImg = document.getElementsByTagName('img');
+            var now = 3;
+            var target = '';
+            var onOff = true;
+
+            tab(now);
+            
+            for(var i=0;i<aImg.length;i++){
+                aImg[i].index = i;
+                aImg[i].onclick = function () {
+                    if(!onOff){
+                        return;
+                    }
+                    onOff = false;
+                    target = this.index;
+                    if(target>now){
+                        if(target-now<=3){
+                            goNext();
+                        }else {
+                            goPrev();
+                        }
+                    }else {
+                        if(target + 7 - now<=3){
+                            goNext();
+                        }else {
+                            goPrev();
+                        }
+                    }
+                }
+            }
+
+            function goNext() {
+                now ++;
+                if(now>6){
+                    now = 0;
+                }
+                tab(now);
+                if(now == target){
+                    onOff = true;
+                    return;
+                }
+                setTimeout(function () {
+                    goNext();
+                },700)
+            }
+
+            function goPrev() {
+                now --;
+                if(now<0){
+                    now = 6;
+                }
+                tab(now);
+                if(now == target){
+                    onOff = true;
+                    return;
+                }
+                setTimeout(function () {
+                    goPrev();
+                },700)
+            }
+            
+            function tab(n) {
+                for(var i=0;i<3;i++){
+                    var Left = n - 1 -i;
+                    if(Left<0){
+                        Left = Left+7;
+                    }
+                    aImg[Left].style.transform = 'translateX(' + (-150*(i+1)) + 'px) translateZ('+ (200-i*100) + 'px) rotateY(30deg)';
+                    var Right = n + 1 +i;
+                    if(Right>6){
+                        Right = Right-7;
+                    }
+                    aImg[Right].style.transform = 'translateX(' + (150*(i+1)) + 'px) translateZ('+ (200-i*100) + 'px) rotateY(-30deg)';
+                }
+                aImg[n].style.transform = 'translateZ(300px)';
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="wrap">
+    <img src="img/0.png"/>
+    <img src="img/1.png"/>
+    <img src="img/2.png"/>
+    <img src="img/3.png"/>
+    <img src="img/4.png"/>
+    <img src="img/5.png"/>
+    <img src="img/6.png"/>
+</div>
+</body>
+</html>
